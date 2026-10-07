@@ -3,6 +3,9 @@
 import os, re, json, datetime
 
 BASE = os.environ.get("SITE_URL", "https://www.adripsykcare.com")
+# PREVIEW=True: modo "barbecho" -> no indexable por buscadores. Poner False al publicar con el dominio.
+PREVIEW = True
+
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "docs")
 
 MENU = [("om-oss", "Om Oss"), ("utredning", "Utredning"), ("behandling", "Behandling"),
@@ -204,6 +207,7 @@ def layout(slug, title, desc, main, og_img):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{full_title}</title>
 <meta name="description" content="{desc}">
+{'<meta name="robots" content="noindex, nofollow">' if PREVIEW else ""}
 <link rel="canonical" href="{url}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Adripsykcare">
@@ -281,7 +285,10 @@ def main():
     urls = [""] + [f"{s}/" for s, _ in MENU]
     write("sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
           "".join(f"  <url><loc>{BASE}/{u}</loc><lastmod>{today}</lastmod></url>\n" for u in urls) + "</urlset>\n")
-    write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")
+    if PREVIEW:
+        write("robots.txt", "User-agent: *\nDisallow: /\n")
+    else:
+        write("robots.txt", f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")
     open(os.path.join(OUT, ".nojekyll"), "w").close()
 
 if __name__ == "__main__":

@@ -8,6 +8,8 @@ Sitio de www.adripsykcare.com / www.adripsykcare.se, como sitio estático propio
 
 ## Puesta en marcha con dominio propio (cuando se valide)
 
+0. En `build.py` poner `PREVIEW = False` (quita el bloqueo a buscadores) y regenerar.
+
 1. GitHub → Settings → Pages → Custom domain: `www.adripsykcare.com` → activar *Enforce HTTPS*.
 2. En Loopia, quitar el reenvío enmascarado de ambos dominios y poner los DNS:
    - `www` → CNAME `<usuario>.github.io`
